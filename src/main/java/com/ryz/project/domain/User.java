@@ -1,4 +1,4 @@
-package com.ryz.myproject;
+package com.ryz.project.domain;
 
 import java.util.Objects;
 
@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "EMPLOYEEE")
-public class Employee {
+@Table(name = "USER")
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", nullable = false)
@@ -23,8 +23,12 @@ public class Employee {
 	@Column(name = "AGE", nullable = false)
 	private int age;
 
-	private Employee() {}
-	public Employee(String name, String surname, int age) {
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", age=" + age + "]";
+	}
+	private User() {}
+	public User(String name, String surname, int age) {
 		this.setName(name);
 		this.setSurname(surname);
 		this.setAge(age);
@@ -41,7 +45,7 @@ public class Employee {
 			return true;
 		if (obj == null || obj.getClass() != this.getClass())
 			return false;
-		Employee employee = (Employee) obj;
+		User employee = (User) obj;
 		return (age == employee.getAge() && surname == employee.getSurname() && name == employee.getName()
 				&& id == employee.getId());
 	}
