@@ -8,9 +8,6 @@
 	</bean>
 	<bean id="myUserRepoImpl" class="com.ryz.project.implementations.UserRepoImpl">
 		<property name="logger" ref="myLoggerImpl"/>
-		<constructor-arg name="logger" index="0" type="com.ryz.project.api.Logger" ref="myLoggerImpl"/>
-		
+		<constructor-arg name="logger" index="0" type="com.ryz.project.api.Logger" ref="myLoggerImpl"/>	
 	</bean>
-
-
 </beans>

@@ -22,7 +22,9 @@ public class UserRepoImpl implements UserRepo {
 
 	public User createUser(String name, String surname, int age) {
 		User user = new User(name, surname, age);
-		this.add(user);
+		entityManager.getTransaction().begin();
+		entityManager.persist(user);
+		entityManager.getTransaction().commit();
 		logger.log("Create " + user);
 		return user;
 	}
@@ -31,16 +33,15 @@ public class UserRepoImpl implements UserRepo {
 		this.logger = logger;
 
 	}
+	
+	public Logger getLogger() {
+		return this.logger;
+
+	}
 
 	public void closeDatabaseConnection() {
 		entityManager.close();
 		entityManagerFactory.close();
-	}
-
-	public void add(User user) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(user);
-		entityManager.getTransaction().commit();
 	}
 
 	public void updateAge(int id, int age) {
