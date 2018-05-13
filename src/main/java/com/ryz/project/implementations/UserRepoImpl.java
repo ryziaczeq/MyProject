@@ -1,15 +1,19 @@
 package com.ryz.project.implementations;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import com.ryz.project.api.Logger;
 import com.ryz.project.api.UserRepo;
 import com.ryz.project.domain.User;
 
 public class UserRepoImpl implements UserRepo {
-
 	private Logger logger;
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
@@ -33,7 +37,7 @@ public class UserRepoImpl implements UserRepo {
 		this.logger = logger;
 
 	}
-	
+
 	public Logger getLogger() {
 		return this.logger;
 
@@ -63,4 +67,51 @@ public class UserRepoImpl implements UserRepo {
 		return employee.equals(entityManager.find(User.class, id));
 	}
 
+	public List<String> selectItems(String item) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<String> query = builder.createQuery(String.class);
+		Root<User> root = query.from(User.class);
+		query.select(root.get(item));
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	private <Q, R> void compare(CriteriaQuery<Q> query, CriteriaBuilder builder, Root<R> root, String parameter,
+			String value, char comparator, Class<Q> typeQuery, Class<R> typeRoot) {
+		if (comparator == '>')
+			query.where(builder.greaterThan(root.get(parameter), value));
+		else if (comparator == '<')
+			query.where(builder.lessThan(root.get(parameter), value));
+		else
+			query.where(builder.equal(root.get(parameter), value));
+	}
+
+	public List<String> selectItemsHeaving(String item, String parameter, String value, char comparator) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<String> query = builder.createQuery(String.class);
+		Root<User> root = query.from(User.class);
+		query.select(root.get(item));
+		compare(query, builder, root, parameter, value, comparator, String.class, User.class);
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	public List<User> selectUsers() {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> query = builder.createQuery(User.class);
+		Root<User> root = query.from(User.class);
+		query.select(root);
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	public List<User> selectUsersHeaving(String parameter, String value, char comparator) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<User> query = builder.createQuery(User.class);
+		Root<User> root = query.from(User.class);
+		query.select(root);
+		compare(query, builder, root, parameter, value, comparator, User.class, User.class);
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	public <T> void showResults(List<T> list, Class<T> type) {
+		list.forEach(text -> System.out.println(text));
+	}
 }
