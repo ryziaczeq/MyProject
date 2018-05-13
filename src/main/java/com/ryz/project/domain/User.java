@@ -1,5 +1,6 @@
 package com.ryz.project.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -7,13 +8,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "USER")
-public class User {
+@Table(name = "USERR")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class User {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue//(strategy = GenerationType.AUTO)
 	@Column(name = "id", nullable = false)
 	private int id;
 	@Column(name = "NAME", nullable = false, length = 30)
@@ -27,7 +34,8 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", age=" + age + "]";
 	}
-	private User() {}
+	public User() {}
+	
 	public User(String name, String surname, int age) {
 		this.setName(name);
 		this.setSurname(surname);
